@@ -61,10 +61,10 @@ public static int  Run(string[] args)
                 if (item.Quantity >= 3)
                     discount += lineTotal * 0.10m;
 
-                if (item.Category == "book")
+                if (item.product.Category == "book")
                     discount += lineTotal * 0.05m;
 
-                if (item.Name.ToLowerInvariant().Contains("clearance"))
+                if (item.product.Name.ToLowerInvariant().Contains("clearance"))
                     discount += 2.00m;
 
                 if (discount > lineTotal)
@@ -73,9 +73,9 @@ public static int  Run(string[] args)
                 decimal taxableAmount = lineTotal - discount;
                 decimal tax;
 
-                if (item.Category == "food")
+                if (item.product.Category == "food")
                     tax = 0;
-                else if (item.Category == "luxury")
+                else if (item.product.Category == "luxury")
                     tax = taxableAmount * 0.20m;
                 else
                     tax = taxableAmount * 0.10m;
@@ -84,7 +84,7 @@ public static int  Run(string[] args)
                 discountTotal += discount;
                 taxTotal += tax;
 
-                string displayName = item.Name;
+                string displayName = item.product.Name;
                 if (displayName.Length > 18)
                     displayName = displayName.Substring(0, 15) + "...";
 
