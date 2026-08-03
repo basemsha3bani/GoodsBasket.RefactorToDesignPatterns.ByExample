@@ -1,3 +1,4 @@
+using ReceiptGenerator;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -23,7 +24,7 @@ public static int  Run(string[] args)
         try
         {
             string[] lines = File.ReadAllLines(args[0]);
-            var items = new List<(string Name, int Quantity, decimal Price, string Category)>();
+            var items = new List<BasketItem>();
 
             foreach (string rawLine in lines)
             {
@@ -41,7 +42,7 @@ public static int  Run(string[] args)
                 int quantity = int.Parse(parts[1].Trim());
                 decimal price = decimal.Parse(parts[2].Trim(), CultureInfo.InvariantCulture);
                 string category = parts[3].Trim().ToLowerInvariant();
-                items.Add((name, quantity, price, category));
+                items.Add(new BasketItem(name, quantity,price,category));
             }
 
             decimal subtotal = 0;
@@ -54,7 +55,7 @@ public static int  Run(string[] args)
 
             foreach (var item in items)
             {
-                decimal lineTotal = item.Quantity * item.Price;
+                decimal lineTotal = item.Quantity * item.UnitPrice;
                 decimal discount = 0;
 
                 if (item.Quantity >= 3)
@@ -87,7 +88,7 @@ public static int  Run(string[] args)
                 if (displayName.Length > 18)
                     displayName = displayName.Substring(0, 15) + "...";
 
-                output.AppendLine($"{displayName,-18} {item.Quantity,3} x {item.Price,7:0.00} = {lineTotal,8:0.00}");
+                output.AppendLine($"{displayName,-18} {item.Quantity,3} x {item.UnitPrice,7:0.00} = {lineTotal,8:0.00}");
                 if (discount > 0)
                     output.AppendLine($"  discount                              -{discount,8:0.00}");
                 output.AppendLine($"  tax                                    {tax,8:0.00}");
