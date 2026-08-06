@@ -1,4 +1,4 @@
-﻿namespace ReceiptGenerator
+﻿namespace ReceiptGenerator.Domain.Product
 {
     internal class Product
     {
