@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ReceiptGenerator.Domain.Product
 {
-    internal class BasketItem
+    public class BasketItem
     {
 
         public int Quantity { get; set; }

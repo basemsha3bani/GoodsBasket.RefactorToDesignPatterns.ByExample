@@ -1,5 +1,7 @@
-using ReceiptGenerator;
+using ReceiptGenerator.Domain.Discount;
 using ReceiptGenerator.Domain.Product;
+using ReceiptGenerator.Domain.Receipt;
+using ReceiptGenerator.Domain.Tax;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -105,30 +107,14 @@ public static class Program
     private static  ReceiptLine CalculateReceiptLine(BasketItem item)
     {
         decimal lineTotal = item.Quantity * item.UnitPrice;
-        decimal discount = 0;
+        var receiptLineCalculator =
+    new ReceiptLineCalculator(
+         new PercentageTaxStrategy(),
+        new PercentageDiscountStrategy()
+       );
+        
+  
 
-        if (item.Quantity >= 3)
-            discount += lineTotal * 0.10m;
-
-        if (item.product.Category == "book")
-            discount += lineTotal * 0.05m;
-
-        if (item.product.Name.ToLowerInvariant().Contains("clearance"))
-            discount += 2.00m;
-
-        if (discount > lineTotal)
-            discount = lineTotal;
-
-        decimal taxableAmount = lineTotal - discount;
-        decimal tax;
-
-        if (item.product.Category == "food")
-            tax = 0;
-        else if (item.product.Category == "luxury")
-            tax = taxableAmount * 0.20m;
-        else
-            tax = taxableAmount * 0.10m;
-
-        return new ReceiptLine(item, lineTotal, discount, tax);
+        return receiptLineCalculator.CalculateLineTotal(item);
     }
 }

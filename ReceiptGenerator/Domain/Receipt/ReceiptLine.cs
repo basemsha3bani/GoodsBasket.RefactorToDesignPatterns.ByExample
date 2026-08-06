@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReceiptGenerator
+namespace ReceiptGenerator.Domain.Receipt
 {
 
     ///member of type BasketItem
-    internal class ReceiptLine
+    public class ReceiptLine
     {
         public ReceiptLine(BasketItem basketItem, decimal subtotal, decimal discount, decimal tax)
         {
@@ -22,7 +23,7 @@ namespace ReceiptGenerator
 
         internal BasketItem basketItem { get; set; }
 
-        internal decimal LineTotal
+        public decimal LineTotal
         {
             get
             {

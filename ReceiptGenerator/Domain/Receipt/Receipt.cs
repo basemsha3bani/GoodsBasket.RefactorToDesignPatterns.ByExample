@@ -1,4 +1,4 @@
-﻿using ReceiptGenerator;
+﻿using ReceiptGenerator.Domain.Receipt;
 
 internal class Receipt
 {

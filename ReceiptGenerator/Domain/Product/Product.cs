@@ -1,6 +1,6 @@
 ﻿namespace ReceiptGenerator.Domain.Product
 {
-    internal class Product
+    public class Product
     {
         public string Name { get; set; }
         
