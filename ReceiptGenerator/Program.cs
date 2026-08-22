@@ -110,7 +110,9 @@ public static class Program
         var receiptLineCalculator =
     new ReceiptLineCalculator(
          new PercentageTaxStrategy(),
-        new PercentageDiscountStrategy()
+       new CappedDiscountStrategy(new CompositeDiscountStrategy
+       (new List<IDiscountStrategy> { new BooksDiscountStrategy(), new QuantityDiscountStrategy(), new ClearanceDiscountStrategy() })
+       )
        );
         
   
