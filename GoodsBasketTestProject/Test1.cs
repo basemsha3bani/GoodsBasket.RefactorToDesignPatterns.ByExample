@@ -1,6 +1,6 @@
 ﻿using ReceiptGenerator.Domain.Discount;
 using ReceiptGenerator.Domain.Product;
-using ReceiptGenerator.Domain.Receipt;
+using ReceiptGenerator.Domain.ReceiptEntities;
 using ReceiptGenerator.Domain.Tax;
 
 namespace GoodsBasketTestProject

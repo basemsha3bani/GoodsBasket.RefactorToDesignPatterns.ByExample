@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReceiptGenerator.Domain.Receipt
+namespace ReceiptGenerator.Domain.ReceiptEntities
 {
 
     ///member of type BasketItem

@@ -1,7 +1,11 @@
+using ReceiptGenerator.Application;
 using ReceiptGenerator.Domain.Discount;
 using ReceiptGenerator.Domain.Product;
-using ReceiptGenerator.Domain.Receipt;
+
+using ReceiptGenerator.Domain.ReceiptEntities;
 using ReceiptGenerator.Domain.Tax;
+using ReceiptGenerator.infrastructure;
+using ReceiptGenerator.infrastructure.Rendering;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -50,51 +54,24 @@ public static class Program
               
             }
 
-            decimal subtotal = 0;
-            decimal discountTotal = 0;
-            decimal taxTotal = 0;
-            var output = new StringBuilder();
-            output.AppendLine("========================================");
-            output.AppendLine("             CORNER SHOP");
-            output.AppendLine("========================================");
-            var receiptLines = new List<ReceiptLine>();
-            receiptLines = items.Select(item => CalculateReceiptLine(item)).ToList();
-            Receipt x= new Receipt(receiptLines);
-
-            foreach (var receiptLine in x.Lines)
+CappedDiscountStrategy cappedDiscountStrategy = new CappedDiscountStrategy(new CompositeDiscountStrategy(new List<IDiscountStrategy>
             {
-                string displayName = receiptLine.basketItem.product.Name;
+                new BooksDiscountStrategy(),
+                new QuantityDiscountStrategy(),
+                new ClearanceDiscountStrategy()
+            }));
+ReceiptLineCalculator receiptLineCalculator = new ReceiptLineCalculator(new PercentageTaxStrategy(), cappedDiscountStrategy);
+            var application =
+     new ReceiptApplication(
+          new receiptRenderer(),
+         new receiptwriter(),
+         new BaseketReader(),
+         receiptLineCalculator
+        );
 
-                output.AppendLine(
-                    $"{displayName,-18} " +
-                    $"{receiptLine.basketItem.Quantity,3} x " +
-                    $"{receiptLine.basketItem.UnitPrice,7:0.00} = " +
-                    $"{receiptLine.subtotal,8:0.00}");
+            application.GenerateReceipt(args[0], args[1]);
 
-                if (receiptLine.discount > 0)
-                {
-                    output.AppendLine(
-                        $"  discount                              -" +
-                        $"{receiptLine.discount,8:0.00}");
-                }
 
-                output.AppendLine(
-                    $"  tax                                    " +
-                    $"{receiptLine.tax,8:0.00}");
-                
-                subtotal += receiptLine.subtotal;
-                discountTotal += receiptLine.discount;
-                taxTotal += receiptLine.tax;
-            }
-            decimal total = subtotal - discountTotal + taxTotal;
-            output.AppendLine("----------------------------------------");
-            output.AppendLine($"Subtotal:                        {subtotal,10:0.00}");
-            output.AppendLine($"Discounts:                      -{discountTotal,10:0.00}");
-            output.AppendLine($"Tax:                             {taxTotal,10:0.00}");
-            output.AppendLine($"TOTAL:                           {total,10:0.00}");
-            output.AppendLine("========================================");
-
-            File.WriteAllText(args[1], output.ToString());
             Console.WriteLine("Receipt written to " + args[1]);
             return 0;
         }
@@ -104,19 +81,5 @@ public static class Program
             return 1;
         }
     }
-    private static  ReceiptLine CalculateReceiptLine(BasketItem item)
-    {
-        decimal lineTotal = item.Quantity * item.UnitPrice;
-        var receiptLineCalculator =
-    new ReceiptLineCalculator(
-         new PercentageTaxStrategy(),
-       new CappedDiscountStrategy(new CompositeDiscountStrategy
-       (new List<IDiscountStrategy> { new BooksDiscountStrategy(), new QuantityDiscountStrategy(), new ClearanceDiscountStrategy() })
-       )
-       );
-        
-  
-
-        return receiptLineCalculator.CalculateLineTotal(item);
-    }
+    
 }
