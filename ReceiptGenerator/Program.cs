@@ -1,4 +1,5 @@
 using ReceiptGenerator.Application;
+using ReceiptGenerator.Composition;
 using ReceiptGenerator.Domain.Discount;
 using ReceiptGenerator.Domain.Product;
 
@@ -53,21 +54,22 @@ public static class Program
                 items.Add(basketItem);
               
             }
-
-CappedDiscountStrategy cappedDiscountStrategy = new CappedDiscountStrategy(new CompositeDiscountStrategy(new List<IDiscountStrategy>
+            CappedDiscountStrategy cappedDiscountStrategy = new CappedDiscountStrategy(new CompositeDiscountStrategy(new List<IDiscountStrategy>
             {
                 new BooksDiscountStrategy(),
                 new QuantityDiscountStrategy(),
                 new ClearanceDiscountStrategy()
             }));
-ReceiptLineCalculator receiptLineCalculator = new ReceiptLineCalculator(new PercentageTaxStrategy(), cappedDiscountStrategy);
-            var application =
-     new ReceiptApplication(
-          new receiptRenderer(),
-         new receiptwriter(),
-         new BaseketReader(),
-         receiptLineCalculator
-        );
+            ReceiptGeneratorBuilder receiptGeneratorBuilder = new ReceiptGeneratorBuilder()
+                 .UseBasketReader(new BaseketReader())
+                .UseReceiptRenderer(new receiptRenderer())
+                .UseReceiptWriter(new receiptwriter())
+                .UseDiscountStrategy(cappedDiscountStrategy)
+                .UseTaxStrategy(new PercentageTaxStrategy());
+           
+           
+
+            var application = receiptGeneratorBuilder.Build();
 
             application.GenerateReceipt(args[0], args[1]);
 
