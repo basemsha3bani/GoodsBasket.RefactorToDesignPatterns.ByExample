@@ -9,7 +9,7 @@ Goal: Improve maintainability, testability, and extensibility for multi-country 
 ## Solution / Architecture
 -
 - **Rules Engine**: `Applicable` + `Priority` + `Resolver` pattern to select country-specific tax/discount rules
-- **Patterns Used**: Builder
+- **Patterns Used**: Builder,Decorator
 - **Testing**: Characterization tests to ensure behavior-preserving refactors
 
 ## How to Run
