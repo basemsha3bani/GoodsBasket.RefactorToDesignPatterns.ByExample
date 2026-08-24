@@ -5,6 +5,8 @@ using ReceiptGenerator.Domain.Product;
 
 using ReceiptGenerator.Domain.ReceiptEntities;
 using ReceiptGenerator.Domain.Tax;
+using ReceiptGenerator.Domain.Tax.Rules;
+using ReceiptGenerator.Domain.Tax.Rules.Resolving;
 using ReceiptGenerator.infrastructure;
 using ReceiptGenerator.infrastructure.Rendering;
 using System.Globalization;
@@ -60,12 +62,20 @@ public static class Program
                 new QuantityDiscountStrategy(),
                 new ClearanceDiscountStrategy()
             }));
+            var taxRuleResolver =
+    new Resolver(
+        new ITaxRule[]
+        {
+            new FoodTaxRule(),
+            new LuxuryTaxRule(),
+            new StandardTaxRule()
+        });
             ReceiptGeneratorBuilder receiptGeneratorBuilder = new ReceiptGeneratorBuilder()
                  .UseBasketReader(new BaseketReader())
                 .UseReceiptRenderer(new receiptRenderer())
                 .UseReceiptWriter(new receiptwriter())
                 .UseDiscountStrategy(cappedDiscountStrategy)
-                .UseTaxStrategy(new PercentageTaxStrategy());
+                .UseTaxStrategy(new RuleBasedTaxStrategy(taxRuleResolver));
            
            
 

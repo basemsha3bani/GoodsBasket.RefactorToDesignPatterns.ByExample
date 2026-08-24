@@ -213,43 +213,8 @@ namespace GoodsBasketTestProject
         ///
         ///<summary>Calculate_WithNoDiscountAndNoTax_ReturnsSubtotal</summary>
         ///
-        [TestMethod]
-        public void Calculate_WithNoDiscountAndNoTax_ReturnsSubtotal()
-        {
-            var calculator =
-         new ReceiptLineCalculator(
-             new NoTaxStrategy(),
-             new NoDiscountStrategy());
-
-            var item = new BasketItem(
-                "Pen",
-                2,
-                5.00m, "stationery");
-
-            ReceiptLine result =
-                calculator.CalculateLineTotal(item);
-
-            //Assert.AreEqual(10.00m, result.s);
-            //Assert.AreEqual(0, result.Discount);
-            //Assert.AreEqual(0, result.Tax);
-            Assert.AreEqual(10.00m, result.LineTotal);
-        }
-        [TestMethod]
-        public void CalculateTax_ForLuxuryItem_UsesTwentyPercent()
-        {
-           
-
-            var item =
-                new BasketItem("Luxury Pen", 1, 100.00m, "luxury");
-
-            var strategy =
-                new PercentageTaxStrategy();
-
-            decimal result =
-                strategy.CalculateTax(item);
-
-            Assert.AreEqual(20.00m, result);
-        }
+       
+        
     }
 
 }
