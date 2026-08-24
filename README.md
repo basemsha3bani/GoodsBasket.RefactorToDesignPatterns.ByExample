@@ -1,22 +1,20 @@
-# Receipt Generator — Refactoring Practice
+# Receipt Processing Engine | C# .NET 8
 
-This repository contains deliberately messy but functional C# code for practicing refactoring and design patterns. The program reads a CSV basket, applies discounts and taxes, and writes a text receipt.
+A refactored receipt processor that applies discounts, taxes, and formatting rules using  design patterns.
 
-The starting implementation intentionally mixes command-line handling, file I/O, parsing, business rules, calculation, formatting, and error handling. Begin with characterization tests and refactor it in small behavior-preserving commits.
+## Problem
+The original implementation mixed concerns: CLI, I/O, parsing, business rules, and formatting were all in one place. 
+Goal: Improve maintainability, testability, and extensibility for multi-country tax rules.
 
-## Run
+## Solution / Architecture
+-
+- **Rules Engine**: `Applicable` + `Priority` + `Resolver` pattern to select country-specific tax/discount rules
+- **Patterns Used**: Builder
+- **Testing**: Characterization tests to ensure behavior-preserving refactors
 
-```powershell
-dotnet run --project ReceiptGenerator -- ReceiptGenerator/sample-basket.csv receipt.txt
-```
+## How to Run
+1. `dotnet run -- input.csv`
+2. Reads CSV basket → applies rules → outputs formatted receipt.txt
 
-## Current behavior
-
-- Three or more units receive a 10% discount.
-- Books receive an additional 5% discount.
-- Product names containing `clearance` receive a fixed 2.00 discount.
-- Discounts cannot exceed the original line total.
-- Food is tax-free, luxury items are taxed at 20%, and other items at 10%.
-- Product names longer than 18 characters are truncated on the receipt.
-
-See [REFACTORING_PLAN.md](REFACTORING_PLAN.md) for the exercise roadmap.
+## What I Learned
+Refactoring legacy code without breaking behavior, applying SOLID, and designing for future requirements like new tax jurisdictions.
