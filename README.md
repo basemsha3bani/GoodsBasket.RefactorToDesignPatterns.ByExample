@@ -7,7 +7,7 @@ The original implementation mixed concerns: CLI, I/O, parsing, business rules, a
 Goal: Improve maintainability, testability, and extensibility for multi-country tax rules.
 
 ## Solution / Architecture
--
+
 - **Rules Engine**: `Applicable` + `Priority` + `Resolver` pattern to select country-specific tax/discount rules
 - **Patterns Used**: Builder,Decorator
 - **Testing**: Characterization tests to ensure behavior-preserving refactors
